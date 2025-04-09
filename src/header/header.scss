@@ -1,0 +1,102 @@
+.header {
+  background-color: #111;
+  color: white;
+  font-family: 'JetBrains Mono', monospace;
+  padding: 15px 30px;
+  border-bottom: 1px solid #2a2a2a;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  position: relative;
+  z-index: 1000;
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  .header-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+
+  .logo {
+    font-size: 22px;
+    font-weight: bold;
+    color: #00f7ff;
+    text-shadow: 0 0 5px rgba(0, 247, 255, 0.5);
+    letter-spacing: 1px;
+    margin-right: 40px;
+  }
+
+  .header-nav {
+    display: flex;
+    gap: 24px;
+
+    a {
+      color: #bbb;
+      text-decoration: none;
+      font-size: 14px;
+      transition: 0.2s ease;
+
+      &:hover {
+        color: #00f7ff;
+        text-shadow: 0 0 3px #00f7ff;
+      }
+    }
+
+    &.mobile {
+      display: none;
+      flex-direction: column;
+      padding-top: 10px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+
+      &.open {
+        display: flex;
+        max-height: 500px;
+      }
+    }
+
+    &.desktop {
+      display: flex;
+      align-items: center;
+      flex: 1;
+    }
+  }
+
+  .header-icons {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+
+    .menu-toggle {
+      display: none;
+      cursor: pointer;
+    }
+
+    .header-user {
+      color: #bbb;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .header-main {
+      flex-direction: column;
+      align-items: flex-start;
+      display: flex;
+      flex-direction: row;
+    }
+
+    .header-nav.desktop {
+      display: none;
+    }
+
+    .header-icons .menu-toggle {
+      display: block;
+    }
+  }
+}
