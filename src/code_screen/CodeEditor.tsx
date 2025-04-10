@@ -42,6 +42,20 @@ const CodeEditor: React.FC = () => {
           console.error('Compile error:', err);
         });
     };
+
+    type TestCase = {
+      input: string;
+      expectedOutput: string;
+      passed?: boolean; 
+    };
+
+    
+const [testCases, setTestCases] = useState<TestCase[]>([
+  { input: "2 3", expectedOutput: "5", passed: true },
+  { input: "4 5", expectedOutput: "9", passed: false },
+  { input: "10 20", expectedOutput: "30" },
+]);
+
   
     return (
       <div className='main-page-editor'>
@@ -106,16 +120,63 @@ const CodeEditor: React.FC = () => {
               }}
             />
           </Rnd>
-
-    
           <div className="output">
             <h3>Output:</h3>
             <pre>{output}</pre>
           </div>
 
-          <div className='test-cases-container'>  
+          <div className="test-cases-container">
+            <h3 className="text-lg font-semibold mb-3 text-white">Test Cases</h3>
 
-          </div>
+                    <div className="gap-4" style={{ display: 'flex', flexWrap: 'wrap', rowGap: '1rem', columnGap: '10rem'}}>
+                      {testCases.map((testCase, index) => {
+                        const statusColor =
+                          testCase.passed === true
+                            ? 'border-green-500'
+                            : testCase.passed === false
+                            ? 'border-red-500'
+                            : 'border-gray-700';
+
+                        return (
+                          <div
+                            key={index}
+                            className={`w-[300px] bg-[#1e1e1e] rounded-md p-3 border ${statusColor}`}
+                          >
+                            <p className="text-sm">
+                              <span
+                                className={`font-medium ${
+                                  testCase.passed === true
+                                    ? 'text-green-400'
+                                    : testCase.passed === false
+                                    ? 'text-red-400'
+                                    : 'text-gray-300'
+                                }`}
+                              >
+                                Input #{index + 1}:
+                              </span>{' '}
+                              <span
+                                className={`${
+                                  testCase.passed === true
+                                    ? 'text-green-300'
+                                    : testCase.passed === false
+                                    ? 'text-red-300'
+                                    : 'text-white'
+                                }`}
+                              >
+                                {testCase.input}
+                              </span>
+                            </p>
+
+                            <p className="text-sm text-blue-400 mt-2">
+                              <span className="font-medium">Expected Output:</span>{' '}
+                              {testCase.expectedOutput}
+                            </p>
+                          </div>
+                        );
+                      })}
+                </div>
+</div>
+
         </div>
       </div>
     );

@@ -85,9 +85,49 @@
     .test-cases-container {
       background-color: #2d2d30;
       border-radius: 8px;
-      padding: 15px;
+      padding: 20px;
       color: #ccc;
-    }
+    
+      h3 {
+        font-size: 18px;
+        margin-bottom: 15px;
+        color: #00e676;
+        font-weight: bold;
+        border-bottom: 1px solid #444;
+        padding-bottom: 8px;
+      }
+    
+      .test-case {
+        background-color: #1e1e1e;
+        border: 1px solid #444;
+        border-radius: 6px;
+        padding: 12px 15px;
+        margin-bottom: 12px;
+        transition: background-color 0.3s ease;
+    
+        &:hover {
+          background-color: #252526;
+        }
+    
+        p {
+          font-size: 14px;
+          margin: 4px 0;
+    
+          .label {
+            font-weight: 600;
+            margin-right: 5px;
+          }
+    
+          .input {
+            color: #90ee90;
+          }
+    
+          .output {
+            color: #87cefa;
+          }
+        }
+      }
+    }    
   }
 }
 
