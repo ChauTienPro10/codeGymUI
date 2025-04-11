@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
 import './CodeEditor.scss';
 import AceEditor from 'react-ace';
 import { Rnd } from "react-rnd";
@@ -8,25 +8,44 @@ import 'ace-builds/src-noconflict/mode-java';
 import 'ace-builds/src-noconflict/mode-c_cpp';
 import 'ace-builds/src-noconflict/theme-monokai';
 
-const SERVER_URL = process.env.SERVER_URL;
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const CodeEditor: React.FC = () => {
     const [language, setLanguage] = useState('javascript');
-    const [code, setCode] = useState('// Write your code here');
+
+    // xử lý cho code defaulf.
+    const [code, setCode] = useState('');
+    useEffect(() => {
+      if (language === 'javascript') {
+
+      }
+
+      if (language === 'java') {
+        fetch('/templates/template.java')
+        .then((res) => res.text())
+        .then((data) => {
+          setCode(data);
+        })
+        .catch((error) => {
+          console.error("Error loading template:", error);
+          setCode('// Write your code here');
+        });
+      }
+    }, [language]);
+
     const [output, setOutput] = useState('');
+
+    const [sttOutput, setSttOutput] = useState(0)
   
     const handleRun = () => {
-      // Fake output (thay bằng API thực sau này)
-      setOutput(`Output for ${language}:\n${code}`);
-    };
-
-    const handleCompile = () => {
       console.log(SERVER_URL);
       const payload = {
         language: language,    
-        code: code,          
+        code: code,
+        idUser: 1002,
+        challengeId: 2,
       };
     
-      fetch(`http://localhost:8080/java/compile/`, {
+      fetch(`${SERVER_URL}/java/compile/run`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -35,10 +54,48 @@ const CodeEditor: React.FC = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
-          // Xử lý kết quả trả về, ví dụ: setOutput(data.output)
+          if(data.code != 200) {
+            setSttOutput(1);
+            const result = data?.data?.result;
+            setOutput(result)
+          } else {
+            setSttOutput(0);
+            setOutput(data?.data?.result)
+            console.log(data?.data?.result)
+          }
         })
-        .catch((err) => {
+        .catch((err) => { 
+          console.error('Compile error:', err);
+        });
+    };
+
+    const handleCompile = () => {
+      console.log(SERVER_URL);
+      const payload = {
+        language: language,    
+        code: code,
+        idUser: 1002,          
+      };
+    
+      fetch(`${SERVER_URL}/java/compile/`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if(data.code != 200) {
+            setSttOutput(1);
+            const result = data?.data?.result;
+            setOutput(result)
+          } else {
+            setSttOutput(0);
+            setOutput("Successfully!")
+          }
+        })
+        .catch((err) => { 
           console.error('Compile error:', err);
         });
     };
@@ -122,7 +179,8 @@ const [testCases, setTestCases] = useState<TestCase[]>([
           </Rnd>
           <div className="output">
             <h3>Output:</h3>
-            <pre>{output}</pre>
+            <pre style={{ color: sttOutput === 1 ? 'red' : 'green' }}>{output}</pre>
+
           </div>
 
           <div className="test-cases-container">
