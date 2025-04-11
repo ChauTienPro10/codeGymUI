@@ -8,11 +8,12 @@ import 'ace-builds/src-noconflict/mode-java';
 import 'ace-builds/src-noconflict/mode-c_cpp';
 import 'ace-builds/src-noconflict/theme-monokai';
 
-const SERVER_URL = process.env.SERVER_URL;
+const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const CodeEditor: React.FC = () => {
     const [language, setLanguage] = useState('javascript');
     const [code, setCode] = useState('// Write your code here');
     const [output, setOutput] = useState('');
+    const [sttOutput, setSttOutput] = useState(0)
   
     const handleRun = () => {
       // Fake output (thay bằng API thực sau này)
@@ -26,7 +27,7 @@ const CodeEditor: React.FC = () => {
         code: code,          
       };
     
-      fetch(`http://localhost:8080/java/compile/`, {
+      fetch(`${SERVER_URL}/java/compile/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -35,8 +36,13 @@ const CodeEditor: React.FC = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
-          // Xử lý kết quả trả về, ví dụ: setOutput(data.output)
+          if(data.code != 200) {
+            setSttOutput(1);
+            const result = data?.data?.result;
+            setOutput(result)
+          } else {
+            setSttOutput(0);
+          }
         })
         .catch((err) => {
           console.error('Compile error:', err);
@@ -122,7 +128,8 @@ const [testCases, setTestCases] = useState<TestCase[]>([
           </Rnd>
           <div className="output">
             <h3>Output:</h3>
-            <pre>{output}</pre>
+            <pre style={{ color: sttOutput === 1 ? 'red' : 'green' }}>{output}</pre>
+
           </div>
 
           <div className="test-cases-container">
