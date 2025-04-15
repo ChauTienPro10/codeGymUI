@@ -7,98 +7,39 @@ import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/mode-java';
 import 'ace-builds/src-noconflict/mode-c_cpp';
 import 'ace-builds/src-noconflict/theme-monokai';
+import { useFetch } from '../useFetch';
+import { useJavaCompileHandler } from './useJavaCompileHandler';
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+const compileUrl = `${SERVER_URL}/java/compile/`;
+const runUrl = `${SERVER_URL}/java/compile/run`;
+const testUrl = `${SERVER_URL}/java/compile/runWithTestcases`;
+
 const CodeEditor: React.FC = () => {
     const [language, setLanguage] = useState('javascript');
 
     // xử lý cho code defaulf.
     const [code, setCode] = useState('');
+    const { data, loading, error } = useFetch<any>(`${SERVER_URL}/java/compile/challenge/1`);
     useEffect(() => {
       if (language === 'javascript') {
-
+         setCode("output");
       }
 
       if (language === 'java') {
-        fetch('/templates/template.java')
-        .then((res) => res.text())
-        .then((data) => {
-          setCode(data);
-        })
-        .catch((error) => {
-          console.error("Error loading template:", error);
-          setCode('// Write your code here');
-        });
+        console.log(data.data)
+        setCode(data.data.template);
       }
     }, [language]);
+    ////////////////////////////////////////////////
 
-    const [output, setOutput] = useState('');
-
-    const [sttOutput, setSttOutput] = useState(0)
-  
-    const handleRun = () => {
-      console.log(SERVER_URL);
-      const payload = {
-        language: language,    
-        code: code,
-        idUser: 1002,
-        challengeId: 2,
-      };
-    
-      fetch(`${SERVER_URL}/java/compile/run`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if(data.code != 200) {
-            setSttOutput(1);
-            const result = data?.data?.result;
-            setOutput(result)
-          } else {
-            setSttOutput(0);
-            setOutput(data?.data?.result)
-            console.log(data?.data?.result)
-          }
-        })
-        .catch((err) => { 
-          console.error('Compile error:', err);
-        });
-    };
-
-    const handleCompile = () => {
-      console.log(SERVER_URL);
-      const payload = {
-        language: language,    
-        code: code,
-        idUser: 1002,          
-      };
-    
-      fetch(`${SERVER_URL}/java/compile/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if(data.code != 200) {
-            setSttOutput(1);
-            const result = data?.data?.result;
-            setOutput(result)
-          } else {
-            setSttOutput(0);
-            setOutput("Successfully!")
-          }
-        })
-        .catch((err) => { 
-          console.error('Compile error:', err);
-        });
-    };
+    const { handleCompile, handleRun, handleTest, output, loading: compilerLoading, sttOutput } = useJavaCompileHandler(
+      compileUrl,
+      runUrl,
+      testUrl,
+      code,
+      language
+    );
 
     type TestCase = {
       input: string;
@@ -118,8 +59,10 @@ const [testCases, setTestCases] = useState<TestCase[]>([
       <div className='main-page-editor'>
         <div className='chanlenge-container'>
           <h3>Tiêu đề bài toán</h3>
-          <p>Nội dung thử thách</p>
+          <p>{data?.data?.content}</p>
           <h3>Ví dụ input-output</h3>
+          <p>Input : {data?.data?.simpleInput}</p>
+          <p>Output : {data?.data?.simpleOutput}</p>
         </div>
         <div className="editor-container">
           <div className="toolbar">
@@ -134,7 +77,7 @@ const [testCases, setTestCases] = useState<TestCase[]>([
             </select>
             <div className='action'>
               <button onClick={handleCompile}>Compile</button>
-              <button onClick={handleRun}>▶ Run</button>
+              <button onClick={handleTest}>▶ Run</button>
             </div>
           </div>
     
