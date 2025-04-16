@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect  } from 'react';
 import './CodeEditor.scss';
+import '../taiwind.css';
 import AceEditor from 'react-ace';
 import { Rnd } from "react-rnd";
 import 'ace-builds/src-noconflict/mode-javascript';
@@ -7,68 +8,47 @@ import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/mode-java';
 import 'ace-builds/src-noconflict/mode-c_cpp';
 import 'ace-builds/src-noconflict/theme-monokai';
+import { useFetch } from '../useFetch';
+import { useJavaCompileHandler } from './useJavaCompileHandler';
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+const compileUrl = `${SERVER_URL}/java/compile/`;
+const runUrl = `${SERVER_URL}/java/compile/run`;
+const testUrl = `${SERVER_URL}/java/compile/runWithTestcases`;
+
 const CodeEditor: React.FC = () => {
     const [language, setLanguage] = useState('javascript');
-    const [code, setCode] = useState('// Write your code here');
-    const [output, setOutput] = useState('');
-    const [sttOutput, setSttOutput] = useState(0)
-  
-    const handleRun = () => {
-      // Fake output (thay bằng API thực sau này)
-      setOutput(`Output for ${language}:\n${code}`);
-    };
 
-    const handleCompile = () => {
-      console.log(SERVER_URL);
-      const payload = {
-        language: language,    
-        code: code,          
-      };
-    
-      fetch(`${SERVER_URL}/java/compile/`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload),
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          if(data.code != 200) {
-            setSttOutput(1);
-            const result = data?.data?.result;
-            setOutput(result)
-          } else {
-            setSttOutput(0);
-          }
-        })
-        .catch((err) => {
-          console.error('Compile error:', err);
-        });
-    };
+    // xử lý cho code defaulf.
+    const [code, setCode] = useState('');
+    const { data, loading, error } = useFetch<any>(`${SERVER_URL}/java/compile/challenge/1`);
+    useEffect(() => {
+      if (language === 'javascript') {
+         setCode("output");
+      }
 
-    type TestCase = {
-      input: string;
-      expectedOutput: string;
-      passed?: boolean; 
-    };
+      if (language === 'java') {
+        setCode(data.data.template);
+      }
+    }, [language]);
+    ////////////////////////////////////////////////
 
-    
-const [testCases, setTestCases] = useState<TestCase[]>([
-  { input: "2 3", expectedOutput: "5", passed: true },
-  { input: "4 5", expectedOutput: "9", passed: false },
-  { input: "10 20", expectedOutput: "30" },
-]);
+    const { handleCompile, handleRun, handleTest, testCases, output,  loading: compilerLoading, sttOutput } = useJavaCompileHandler(
+      compileUrl,
+      runUrl,
+      testUrl,
+      code,
+      language
+    );
 
-  
     return (
       <div className='main-page-editor'>
         <div className='chanlenge-container'>
           <h3>Tiêu đề bài toán</h3>
-          <p>Nội dung thử thách</p>
+          <p>{data?.data?.content}</p>
           <h3>Ví dụ input-output</h3>
+          <p>Input : {data?.data?.simpleInput}</p>
+          <p>Output : {data?.data?.simpleOutput}</p>
         </div>
         <div className="editor-container">
           <div className="toolbar">
@@ -84,6 +64,7 @@ const [testCases, setTestCases] = useState<TestCase[]>([
             <div className='action'>
               <button onClick={handleCompile}>Compile</button>
               <button onClick={handleRun}>▶ Run</button>
+              <button onClick={handleTest}>Submit</button>
             </div>
           </div>
     
@@ -138,9 +119,9 @@ const [testCases, setTestCases] = useState<TestCase[]>([
                     <div className="gap-4" style={{ display: 'flex', flexWrap: 'wrap', rowGap: '1rem', columnGap: '10rem'}}>
                       {testCases.map((testCase, index) => {
                         const statusColor =
-                          testCase.passed === true
+                          testCase.status === true
                             ? 'border-green-500'
-                            : testCase.passed === false
+                            : testCase.status === false
                             ? 'border-red-500'
                             : 'border-gray-700';
 
@@ -152,9 +133,9 @@ const [testCases, setTestCases] = useState<TestCase[]>([
                             <p className="text-sm">
                               <span
                                 className={`font-medium ${
-                                  testCase.passed === true
+                                  testCase.status === true
                                     ? 'text-green-400'
-                                    : testCase.passed === false
+                                    : testCase.status === false
                                     ? 'text-red-400'
                                     : 'text-gray-300'
                                 }`}
@@ -163,9 +144,9 @@ const [testCases, setTestCases] = useState<TestCase[]>([
                               </span>{' '}
                               <span
                                 className={`${
-                                  testCase.passed === true
+                                  testCase.status === true
                                     ? 'text-green-300'
-                                    : testCase.passed === false
+                                    : testCase.status === false
                                     ? 'text-red-300'
                                     : 'text-white'
                                 }`}
@@ -176,7 +157,7 @@ const [testCases, setTestCases] = useState<TestCase[]>([
 
                             <p className="text-sm text-blue-400 mt-2">
                               <span className="font-medium">Expected Output:</span>{' '}
-                              {testCase.expectedOutput}
+                              {testCase.expectedResult}
                             </p>
                           </div>
                         );
