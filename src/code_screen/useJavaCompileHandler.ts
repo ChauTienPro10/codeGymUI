@@ -4,6 +4,13 @@ export const useJavaCompileHandler = (compileUrl: string, runUrl: string, testUr
   const [output, setOutput] = useState('');
   const [sttOutput, setSttOutput] = useState(0);
 
+  type TestCase = {
+    input: string;
+    expectedResult: string;
+    status: boolean;
+  };
+  const [testCases, setTestCases] = useState<TestCase[]>([]);
+
   const {
     data: compileData,
     error: errorCompile,
@@ -54,7 +61,7 @@ export const useJavaCompileHandler = (compileUrl: string, runUrl: string, testUr
   useEffect(() => {
     if (compileData) {
       setSttOutput(0);
-      setOutput("Successfully!");
+      setOutput("Compile successfull");
     } else if (errorCompile) {
       setSttOutput(1);
       setOutput(errorCompile);
@@ -65,6 +72,7 @@ export const useJavaCompileHandler = (compileUrl: string, runUrl: string, testUr
     if (runData) {
       setSttOutput(0);
       setOutput(runData?.data?.result || '');
+      setTestCases([])
     } else if (errorRun) {
       setSttOutput(1);
       setOutput(errorRun);
@@ -74,7 +82,8 @@ export const useJavaCompileHandler = (compileUrl: string, runUrl: string, testUr
   useEffect(() => {
     if (testData) {
       setSttOutput(0);
-      setOutput(testData?.data?.result || '');
+      setTestCases(testData?.data || []);
+      setOutput("");
     } else if (errorTest) {
       setSttOutput(1);
       setOutput(errorTest);
@@ -86,6 +95,7 @@ export const useJavaCompileHandler = (compileUrl: string, runUrl: string, testUr
     handleRun,
     handleTest,
     output,
+    testCases,
     loading: loadingCompile || loadingRun || loadingTest,
     sttOutput,
   };

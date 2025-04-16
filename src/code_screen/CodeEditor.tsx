@@ -1,5 +1,6 @@
 import React, { useState, useEffect  } from 'react';
 import './CodeEditor.scss';
+import '../taiwind.css';
 import AceEditor from 'react-ace';
 import { Rnd } from "react-rnd";
 import 'ace-builds/src-noconflict/mode-javascript';
@@ -27,13 +28,12 @@ const CodeEditor: React.FC = () => {
       }
 
       if (language === 'java') {
-        console.log(data.data)
         setCode(data.data.template);
       }
     }, [language]);
     ////////////////////////////////////////////////
 
-    const { handleCompile, handleRun, handleTest, output, loading: compilerLoading, sttOutput } = useJavaCompileHandler(
+    const { handleCompile, handleRun, handleTest, testCases, output,  loading: compilerLoading, sttOutput } = useJavaCompileHandler(
       compileUrl,
       runUrl,
       testUrl,
@@ -41,20 +41,6 @@ const CodeEditor: React.FC = () => {
       language
     );
 
-    type TestCase = {
-      input: string;
-      expectedOutput: string;
-      passed?: boolean; 
-    };
-
-    
-const [testCases, setTestCases] = useState<TestCase[]>([
-  { input: "2 3", expectedOutput: "5", passed: true },
-  { input: "4 5", expectedOutput: "9", passed: false },
-  { input: "10 20", expectedOutput: "30" },
-]);
-
-  
     return (
       <div className='main-page-editor'>
         <div className='chanlenge-container'>
@@ -77,7 +63,8 @@ const [testCases, setTestCases] = useState<TestCase[]>([
             </select>
             <div className='action'>
               <button onClick={handleCompile}>Compile</button>
-              <button onClick={handleTest}>▶ Run</button>
+              <button onClick={handleRun}>▶ Run</button>
+              <button onClick={handleTest}>Submit</button>
             </div>
           </div>
     
@@ -132,9 +119,9 @@ const [testCases, setTestCases] = useState<TestCase[]>([
                     <div className="gap-4" style={{ display: 'flex', flexWrap: 'wrap', rowGap: '1rem', columnGap: '10rem'}}>
                       {testCases.map((testCase, index) => {
                         const statusColor =
-                          testCase.passed === true
+                          testCase.status === true
                             ? 'border-green-500'
-                            : testCase.passed === false
+                            : testCase.status === false
                             ? 'border-red-500'
                             : 'border-gray-700';
 
@@ -146,9 +133,9 @@ const [testCases, setTestCases] = useState<TestCase[]>([
                             <p className="text-sm">
                               <span
                                 className={`font-medium ${
-                                  testCase.passed === true
+                                  testCase.status === true
                                     ? 'text-green-400'
-                                    : testCase.passed === false
+                                    : testCase.status === false
                                     ? 'text-red-400'
                                     : 'text-gray-300'
                                 }`}
@@ -157,9 +144,9 @@ const [testCases, setTestCases] = useState<TestCase[]>([
                               </span>{' '}
                               <span
                                 className={`${
-                                  testCase.passed === true
+                                  testCase.status === true
                                     ? 'text-green-300'
-                                    : testCase.passed === false
+                                    : testCase.status === false
                                     ? 'text-red-300'
                                     : 'text-white'
                                 }`}
@@ -170,7 +157,7 @@ const [testCases, setTestCases] = useState<TestCase[]>([
 
                             <p className="text-sm text-blue-400 mt-2">
                               <span className="font-medium">Expected Output:</span>{' '}
-                              {testCase.expectedOutput}
+                              {testCase.expectedResult}
                             </p>
                           </div>
                         );

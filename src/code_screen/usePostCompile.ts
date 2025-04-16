@@ -21,9 +21,9 @@ export function usePostCompile<T = any>(url: string): CompileResponse<T> {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       });
-
       const json = await response.json();
       if (!response.ok || json.code !== 200) {
+        setData(null)
         throw new Error(json?.data?.result || 'Unknown error');
       }
       setData(json);
