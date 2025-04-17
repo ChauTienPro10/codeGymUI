@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { Menu, X, User } from 'lucide-react';
 import './header.scss';
+import '../taiwind.css';
 
 const Header = () => {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="header">
+    <header className="header fixed top-0 left-0 w-full">
       <div className="header-main">
-        <div className="logo">🚀 RocketCoding</div>
+        <div className="logo">RocketCoding</div>
 
         <nav className="header-nav desktop">
           <a href="#">Home</a>

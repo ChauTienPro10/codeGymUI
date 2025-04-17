@@ -26,7 +26,7 @@ export function usePostCompile<T = any>(url: string): CompileResponse<T> {
         setData(null)
         throw new Error(json?.data?.result || 'Unknown error');
       }
-      setData(json);
+      setData(json);  
     } catch (err: any) {
       setError(err.message || 'Error');
     } finally {
