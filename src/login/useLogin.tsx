@@ -11,12 +11,13 @@ interface LoginResponse {
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 export const useLogin = () => {
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
-  const login = async (username: string, password: string): Promise<LoginResponse | null> => {
+  const login = async (
+    username: string,
+    password: string
+  ): Promise<{ data: LoginResponse | null; error: string | null }> => {
     setLoading(true);
-    setError(null);
-
+  
     try {
       const response = await fetch(`${SERVER_URL}/auth/login`, {
         method: "POST",
@@ -25,23 +26,23 @@ export const useLogin = () => {
         },
         body: JSON.stringify({ username, password }),
       });
-
-      if (!response.ok) {
-        throw new Error("Login failed");
-      }
-
+  
       const result = await response.json();
+  
+      if (!response.ok || !result.data) {
+        const message = result?.message || "Login failed";
+        return { data: null, error: message };
+      }
+  
       localStorage.setItem("token", result.data.jwt);
-      return result;
-
+      return { data: result, error: null };
+  
     } catch (err: any) {
-      setError(err.message);
-      return null;
-
+      return { data: null, error: err.message };
     } finally {
       setLoading(false);
     }
   };
 
-  return { login, loading, error };
+  return {login, loading};
 };

@@ -1,23 +1,54 @@
 import './login.scss';
 import '../taiwind.css';
-import React, { useState } from 'react';
+import React, { useState, useReducer  } from 'react';
 import { useLogin } from './useLogin';
+import CustomAlert from '../customAlert/alert';
+import { alertReducer, initialAlertState } from '../customAlert/alertReducer';
+import { useNavigate } from 'react-router-dom';
 
 const Login: React.FC = () => {
+  const navigate = useNavigate();
+  const [alertState, dispatchAlert] = useReducer(alertReducer, initialAlertState);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { login, loading, error } = useLogin();
+  const { login, loading} = useLogin();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const res = await login(username, password);
-    if (res) {
-      console.log("Đăng nhập thành công", res);
+    const { data, error } = await login(username, password);
+  
+    if (error) {
+      dispatchAlert({
+        type: 'SHOW_ALERT',
+        payload: {
+          message: error,
+          type: 'error',
+        },
+      });
+      return;
+    }
+  
+    if (data) {
+      dispatchAlert({
+        type: 'SHOW_ALERT',
+        payload: {
+          message: `Đăng nhập thành công, xin chào ${data.data.name}`,
+          type: 'info',
+        },
+      });
+      navigate('/');
     }
   };
 
   return (
     <div className="h-[calc(100vh-64px)] flex items-center justify-center" style={{ backgroundColor: '#2c2c2e' }}>
+      {alertState.visible && (
+        <CustomAlert
+          message={alertState.message}
+          type={alertState.type}
+          onClose={() => dispatchAlert({ type: 'HIDE_ALERT' })}
+        />
+      )}
       <div className="w-full max-w-md bg-neutral-800 rounded-2xl shadow-lg p-8 space-y-6">
         <h2 className="text-2xl font-bold text-center text-green-600">Welcome Back</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -28,7 +59,7 @@ const Login: React.FC = () => {
               type="text"
               value={username}
               onChange={e => setUsername(e.target.value)}
-              className="mt-1 w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              className="mt-1 w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 text-black"
               required
             />
           </div>
@@ -40,7 +71,7 @@ const Login: React.FC = () => {
               type="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              className="mt-1 w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400"
+              className="mt-1 w-full px-4 py-2 border rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-400 text-black"
               required
             />
           </div>
