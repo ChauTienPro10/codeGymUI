@@ -1,18 +1,23 @@
 import React, { useState } from 'react';
+import { useNavigate, Link } from "react-router-dom";
 import { Menu, X, User } from 'lucide-react';
 import './header.scss';
 import '../taiwind.css';
 
+const THIS_APP_URL = process.env.REACT_APP_THIS_URL;
 const Header = () => {
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
   return (
     <header className="header fixed top-0 left-0 w-full">
       <div className="header-main">
-        <div className="logo">RocketCoding</div>
+        <div className="logo cursor-pointer"
+          onClick={() => navigate("/")}
+        >CodeGym</div>
 
         <nav className="header-nav desktop">
-          <a href="#">Home</a>
+          <a href="/">Home</a>
           <a href="#">Challenges</a>
           <a href="#">Leaderboard</a>
           <a href="#">Profile</a>
@@ -29,7 +34,7 @@ const Header = () => {
       </div>
 
       <nav className={`header-nav mobile ${open ? 'open' : ''}`}>
-        <a href="#">Home</a>
+        <a href='/'>Home</a>
         <a href="#">Challenges</a>
         <a href="#">Leaderboard</a>
         <a href="#">Profile</a>

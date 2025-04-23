@@ -1,5 +1,6 @@
 import React from 'react';
 import Header from './header/header';
+import Footer from './footer/Footer';
 import { Outlet } from 'react-router-dom';
 
 const MainLayout: React.FC = () => {
@@ -9,6 +10,7 @@ const MainLayout: React.FC = () => {
       <main className="pt-16">
         <Outlet />  
       </main>
+      <Footer />
     </div>
   );
 };
