@@ -32,7 +32,7 @@ const Login: React.FC = () => {
       dispatchAlert({
         type: 'SHOW_ALERT',
         payload: {
-          message: `Đăng nhập thành công, xin chào ${data.data.name}`,
+          message: `Đăng nhập thành công, xin chào ${data.name}`,
           type: 'info',
         },
       });

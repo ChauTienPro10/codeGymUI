@@ -35,7 +35,7 @@ export const useLogin = () => {
       }
   
       localStorage.setItem("token", result.data.jwt);
-      return { data: result, error: null };
+      return { data: result.data, error: null };
   
     } catch (err: any) {
       return { data: null, error: err.message };

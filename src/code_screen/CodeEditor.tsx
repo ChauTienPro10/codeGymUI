@@ -21,7 +21,7 @@ const CodeEditor: React.FC = () => {
 
     // xử lý cho code defaulf.
     const [code, setCode] = useState('');
-    const { data, loading, error } = useFetch<any>(`${SERVER_URL}/java/compile/challenge/1`);
+    const { data, loading, error } = useFetch<any>(`${SERVER_URL}/java/compile/challenge/2`);
     useEffect(() => {
       if (language === 'javascript') {
          setCode("output");
@@ -33,7 +33,7 @@ const CodeEditor: React.FC = () => {
     }, [language]);
     ////////////////////////////////////////////////
 
-    const { handleCompile, handleRun, handleTest, testCases, output,  loading: compilerLoading, sttOutput } = useJavaCompileHandler(
+    const { handleCompile, handleRun, handleTest, testCases, output,  loading: compileLoading, sttOutput } = useJavaCompileHandler(
       compileUrl,
       runUrl,
       testUrl,
@@ -108,7 +108,7 @@ const CodeEditor: React.FC = () => {
             />
           </Rnd>
           <div className="output">
-            <h3>Output:</h3>
+            <h3>{compileLoading ? 'Loading...' : 'Output'}</h3>
             <pre style={{ color: sttOutput === 1 ? 'red' : 'green' }}>{output}</pre>
 
           </div>

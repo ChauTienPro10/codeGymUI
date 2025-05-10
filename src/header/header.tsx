@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 import { Menu, X, User } from 'lucide-react';
 import './header.scss';

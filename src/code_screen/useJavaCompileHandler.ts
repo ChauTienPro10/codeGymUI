@@ -45,7 +45,7 @@ export const useJavaCompileHandler = (compileUrl: string, runUrl: string, testUr
       language,
       code,
       idUser: 1002,
-      challengeId: 1,
+      challengeId: 2,
     });
   };
 
@@ -54,7 +54,7 @@ export const useJavaCompileHandler = (compileUrl: string, runUrl: string, testUr
       language,
       code,
       idUser: 1002,
-      challengeId: 1,
+      challengeId: 2,
     });
   };
 
