@@ -10,6 +10,7 @@ export const useJavaCompileHandler = (compileUrl: string, runUrl: string, testUr
     status: boolean;
   };
   const [testCases, setTestCases] = useState<TestCase[]>([]);
+  const idUser = JSON.parse(localStorage.getItem("user") ?? '{}')?.id;
 
   const {
     data: compileData,
@@ -36,7 +37,7 @@ export const useJavaCompileHandler = (compileUrl: string, runUrl: string, testUr
     postCompile({
       language,
       code,
-      idUser: 1002,
+      idUser: idUser,
     });
   };
 
@@ -44,8 +45,8 @@ export const useJavaCompileHandler = (compileUrl: string, runUrl: string, testUr
     postRun({
       language,
       code,
-      idUser: 1002,
-      challengeId: 2,
+      idUser: idUser,
+      challengeId: 43,
     });
   };
 
@@ -53,8 +54,8 @@ export const useJavaCompileHandler = (compileUrl: string, runUrl: string, testUr
     postTest({
       language,
       code,
-      idUser: 1002,
-      challengeId: 2,
+      idUser: idUser,
+      challengeId: 43,
     });
   };
 
@@ -89,6 +90,8 @@ export const useJavaCompileHandler = (compileUrl: string, runUrl: string, testUr
       setOutput(errorTest);
     }
   }, [testData, errorTest]);
+
+  console.log(output);
 
   return {
     handleCompile,

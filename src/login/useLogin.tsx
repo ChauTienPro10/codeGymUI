@@ -1,4 +1,5 @@
 // src/hooks/useLogin.ts
+import { json } from "node:stream/consumers";
 import { useState } from "react";
 
 interface LoginResponse {
@@ -35,6 +36,7 @@ export const useLogin = () => {
       }
   
       localStorage.setItem("token", result.data.jwt);
+      localStorage.setItem("user", JSON.stringify(result.data))
       return { data: result.data, error: null };
   
     } catch (err: any) {
