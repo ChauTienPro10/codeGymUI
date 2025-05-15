@@ -4,10 +4,9 @@ import '../taiwind.css';
 
 const LeetCode: React.FC = () => {
 
-    const total = 100;  // Tổng số
-    const [current, setCurrent] = useState(60);  // Giá trị hiện tại, ví dụ là 60
+    const total = 100; 
+    const [current, setCurrent] = useState(60);  
 
-    // Tính phần trăm đã hoàn thành
     const percentage = (current / total) * 100;
 
     const [searchTerm, setSearchTerm] = useState('');

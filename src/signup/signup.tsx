@@ -12,6 +12,7 @@ const SignUp: React.FC = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [alertState, dispatchAlert] = useReducer(alertReducer, initialAlertState);
+    const [errInfo, setErrInfo] = useState('')
 
     /**
      * 
@@ -26,6 +27,7 @@ const SignUp: React.FC = () => {
       setUsername('');
       setPassword('');
       setConfirmPassword('');
+      setErrInfo('');
     }
 
     /**
@@ -35,6 +37,10 @@ const SignUp: React.FC = () => {
      */
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        if (password !== confirmPassword) {
+          setErrInfo("Mật khẩu không khớp!");
+          return;
+        }
         const {data, error} = await signup(name, username, password);
         if (error) {
           dispatchAlert({
@@ -50,7 +56,7 @@ const SignUp: React.FC = () => {
           dispatchAlert({
             type: 'SHOW_ALERT',
             payload: {
-              message: `Đăng ký thành công, tào khoản ${data.id}`,
+              message: `Đăng ký thành công, tài khoản ${data.id}`,
               type: 'info', 
             },
           });
@@ -117,7 +123,7 @@ const SignUp: React.FC = () => {
                   required
                 />
               </div>
-    
+              <p className="text-red-500 text-[10px]">{errInfo}</p>
               <button
                 type="submit"
                 className="w-full py-2 bg-green-500 text-white font-semibold rounded-xl hover:bg-green-600 transition"

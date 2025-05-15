@@ -1,13 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from "react-router-dom";
 import { Menu, X, User } from 'lucide-react';
 import './header.scss';
 import '../taiwind.css';
+import { useCustomUser } from '../model/User';
 
 const THIS_APP_URL = process.env.REACT_APP_THIS_URL;
 const Header = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+
+  const { customUser } = useCustomUser();
 
   return (
     <header className="header fixed top-0 left-0 w-full">
@@ -28,7 +31,8 @@ const Header = () => {
             {open ? <X size={24} /> : <Menu size={24} />}
           </div>
           <div className="header-user">
-            <User size={22} />
+            <User className='hidden' size={22} />
+            <p>{customUser?.name}</p>
           </div>
         </div>
       </div>
