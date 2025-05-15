@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useGenHeader } from './use_features/useGenHeader';
 
 export function useFetch<T>(url: string) {
@@ -6,6 +7,7 @@ export function useFetch<T>(url: string) {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const { getHeader } = useGenHeader();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!url) return;
@@ -13,6 +15,11 @@ export function useFetch<T>(url: string) {
     setError(null);
     fetch(url, {method: "GET",headers: getHeader() })
       .then((res) => {
+
+        if (res.status === 401 || res.status === 403) {
+            navigate("/login")
+        }
+
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
         }
