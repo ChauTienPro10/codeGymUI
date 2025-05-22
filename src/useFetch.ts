@@ -15,7 +15,7 @@ export function useFetch<T>(url: string) {
     setError(null);
     fetch(url, {method: "GET",headers: getHeader() })
       .then((res) => {
-
+console.log(res)
         if (res.status === 401 || res.status === 403) {
             navigate("/login")
         }

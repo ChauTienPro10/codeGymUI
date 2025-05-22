@@ -21,7 +21,7 @@ const CodeEditor: React.FC = () => {
 
     // xử lý cho code defaulf.
     const [code, setCode] = useState('');
-    const { data, loading, error } = useFetch<any>(`${SERVER_URL}/java/compile/challenge/43`);
+    const { data, loading, error } = useFetch<any>(`${SERVER_URL}/java/compile/challenge/1`);
     useEffect(() => {
       if (language === 'javascript') {
          setCode("output");

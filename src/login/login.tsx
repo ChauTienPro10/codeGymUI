@@ -1,4 +1,3 @@
-import './login.scss';
 import '../taiwind.css';
 import React, { useState, useReducer  } from 'react';
 import { useLogin } from './useLogin';
