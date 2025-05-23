@@ -10,6 +10,7 @@ import 'ace-builds/src-noconflict/mode-c_cpp';
 import 'ace-builds/src-noconflict/theme-monokai';
 import { useFetch } from '../useFetch';
 import { useJavaCompileHandler } from './useJavaCompileHandler';
+import { useParams } from 'react-router-dom';
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 const compileUrl = `${SERVER_URL}/java/compile/`;
@@ -17,11 +18,12 @@ const runUrl = `${SERVER_URL}/java/compile/run`;
 const testUrl = `${SERVER_URL}/java/compile/runWithTestcases`;
 
 const CodeEditor: React.FC = () => {
+    const { id } = useParams();
     const [language, setLanguage] = useState('javascript');
 
     // xử lý cho code defaulf.
     const [code, setCode] = useState('');
-    const { data, loading, error } = useFetch<any>(`${SERVER_URL}/java/compile/challenge/1`);
+    const { data, loading, error } = useFetch<any>(`${SERVER_URL}/java/compile/challenge/${id}`);
     useEffect(() => {
       if (language === 'javascript') {
          setCode("output");
@@ -34,6 +36,7 @@ const CodeEditor: React.FC = () => {
     ////////////////////////////////////////////////
 
     const { handleCompile, handleRun, handleTest, testCases, output,  loading: compileLoading, sttOutput } = useJavaCompileHandler(
+      id ? id : "null",
       compileUrl,
       runUrl,
       testUrl,

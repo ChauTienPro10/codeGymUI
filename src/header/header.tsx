@@ -7,20 +7,14 @@ import { IoSettings } from "react-icons/io5";
 import { useCustomUser } from '../model/User';
 import { useLogout } from '../login/useLogout';
 import { CiLogin } from "react-icons/ci";
+import { useIsAuthenticated } from '../use_features/useIsAuthenticated';
 
 const Header = () => {
-  const [key, setKey] = useState(0);
   const handleLogin = () => {
     navigate("/login");
-    setKey(key + 1);
   }
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem("token");
-    setIsAuthenticated(!!token);
-  }, []);
+  const isAuthenticated = useIsAuthenticated();
 
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
@@ -40,7 +34,6 @@ const Header = () => {
 
   return (
     <header 
-      key = {key}
       className="header fixed top-0 left-0 w-full">
       <div className="header-main">
         <div className="logo cursor-pointer"
@@ -49,7 +42,7 @@ const Header = () => {
 
         <nav className="header-nav desktop">
           <a href="/">Home</a>
-          <a href="#">Challenges</a>
+          <a href="/leet-codes">Challenges</a>
           <a href="#">Leaderboard</a>
           <a href="#">Profile</a>
         </nav>

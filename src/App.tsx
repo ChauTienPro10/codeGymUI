@@ -15,7 +15,7 @@ const App: React.FC = () => {
           <Route index element={<Home />} /> {/* / */}
           <Route path="login" element={<Login />} /> {/* /editor */}
           <Route path="signup" element={<SignUp />} /> {/* /editor */}
-          <Route path="editor" element={<CodeEditor />} /> {/* /editor */}
+          <Route path="editor/:id" element={<CodeEditor />} /> {/* /editor */}
           <Route path='leet-codes' element={<LeetCode />} />
         </Route>
       </Routes>

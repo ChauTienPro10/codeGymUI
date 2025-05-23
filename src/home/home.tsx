@@ -9,9 +9,9 @@ import 'aos/dist/aos.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faMousePointer } from '@fortawesome/free-solid-svg-icons';
 import InfoBox from './InfoBox';
-import { boxVariants } from './InfoBox';
 import Lottie from 'lottie-react';
 import animationData from './cat-walking.json';
+import { useIsAuthenticated } from '../use_features/useIsAuthenticated';
 
 
 const containerVariants = {
@@ -89,6 +89,7 @@ public class Main {
 }`;
 
 const Home: React.FC = () => {
+  const isAuthenticated = useIsAuthenticated();
   const navigate = useNavigate();
   const [showResult, setShowResult] = useState(false);
   const characters = code.split("");
@@ -99,6 +100,14 @@ const Home: React.FC = () => {
       once: true,
     });
   }, []);
+
+  const handleStart = () => {
+    if (isAuthenticated) {
+      navigate("/editor/1");
+    } else {
+      navigate("/signup");
+    }
+  }
 
   const [showMouse, setShowMouse] = useState(true);
 
@@ -212,9 +221,9 @@ const Home: React.FC = () => {
         <motion.button
           variants={itemVariants}
           className="px-5 sm:px-6 py-2 sm:py-3 text-sm sm:text-base rounded-xl bg-gradient-to-r from-purple-500 to-indigo-500 hover:scale-105 transition-transform"
-          onClick={() => navigate("/signup")}
+          onClick={() => handleStart()}
         >
-          Bắt đầu ngay
+          {isAuthenticated ? 'Bắt đầu đơn giản' : 'Bắt đầu ngay'}
         </motion.button>
       </motion.div>
 

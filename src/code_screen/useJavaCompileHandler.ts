@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { usePostCompile } from './usePostCompile';
-export const useJavaCompileHandler = (compileUrl: string, runUrl: string, testUrl: string, code: string, language: string) => {
+export const useJavaCompileHandler = (idChallenge: string, compileUrl: string, runUrl: string, testUrl: string, code: string, language: string) => {
+  
   const [output, setOutput] = useState('');
   const [sttOutput, setSttOutput] = useState(0);
 
@@ -11,6 +12,11 @@ export const useJavaCompileHandler = (compileUrl: string, runUrl: string, testUr
   };
   const [testCases, setTestCases] = useState<TestCase[]>([]);
   const idUser = JSON.parse(localStorage.getItem("user") ?? '{}')?.id;
+
+  if (idChallenge === "null") {
+    setOutput('');
+    setTestCases([]);
+  }
 
   const {
     data: compileData,
@@ -46,7 +52,7 @@ export const useJavaCompileHandler = (compileUrl: string, runUrl: string, testUr
       language,
       code,
       idUser: idUser,
-      challengeId: 43,
+      challengeId: idChallenge,
     });
   };
 
@@ -55,7 +61,7 @@ export const useJavaCompileHandler = (compileUrl: string, runUrl: string, testUr
       language,
       code,
       idUser: idUser,
-      challengeId: 43,
+      challengeId: idChallenge,
     });
   };
 
