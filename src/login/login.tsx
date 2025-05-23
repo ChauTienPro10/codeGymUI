@@ -36,6 +36,7 @@ const Login: React.FC = () => {
         },
       });
       navigate('/');
+      window.location.reload()
     }
   };
 
