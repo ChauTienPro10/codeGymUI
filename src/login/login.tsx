@@ -1,21 +1,26 @@
 import '../taiwind.css';
-import React, { useState, useReducer  } from 'react';
+import React, { useState, useReducer } from 'react';
 import { useLogin } from './useLogin';
 import CustomAlert from '../customAlert/alert';
 import { alertReducer, initialAlertState } from '../customAlert/alertReducer';
 import { useNavigate } from 'react-router-dom';
+import { FaGithub } from "react-icons/fa";
+import { FaGoogle } from "react-icons/fa";
+import { useLoginByGithub } from '../services/Oauth2Services';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
   const [alertState, dispatchAlert] = useReducer(alertReducer, initialAlertState);
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const { login, loading} = useLogin();
+  const { login, loading } = useLogin();
+
+  const { loginByGithub } = useLoginByGithub();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const { data, error } = await login(username, password);
-  
+
     if (error) {
       dispatchAlert({
         type: 'SHOW_ALERT',
@@ -26,7 +31,7 @@ const Login: React.FC = () => {
       });
       return;
     }
-  
+
     if (data) {
       dispatchAlert({
         type: 'SHOW_ALERT',
@@ -84,9 +89,23 @@ const Login: React.FC = () => {
           </button>
         </form>
 
-        <p className="text-sm text-gray-500 text-center">
-          Don’t have an account? <a href="/signup" className="text-green-600 hover:underline">Sign up</a>
-        </p>
+        <div className="space-y-4">
+          <p className="text-sm text-gray-500 text-center">
+            Don’t have an account?{' '}
+            <a href="/signup" className="text-green-600 hover:underline">
+              Sign up
+            </a>
+          </p>
+
+          <div className="flex items-center justify-center space-x-4">
+            <button className="p-2 border rounded-full hover:bg-gray-100">
+              <FaGithub onClick={() => loginByGithub()} className="text-xl" />
+            </button>
+            <button className="p-2 border rounded-full hover:bg-gray-100">
+              <FaGoogle className="text-xl text-red-500" />
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
