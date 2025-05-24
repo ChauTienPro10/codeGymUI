@@ -1,35 +1,37 @@
 import React, { useState } from 'react';
+import { useFetchChallenge } from '../services/useFetchChallenge';
+import { useNavigate } from 'react-router-dom';
 
 import '../taiwind.css';
 
 const LeetCode: React.FC = () => {
+    const { challenges, loading, error } = useFetchChallenge(3);
 
     const total = 100; 
     const [current, setCurrent] = useState(60);  
 
     const percentage = (current / total) * 100;
 
-    const [searchTerm, setSearchTerm] = useState('');
-    const [category, setCategory] = useState('All');
+    const [search, setSearch] = useState('');
+    const [level, setLevel] = useState('All');
     const [status, setStatus] = useState('All');
 
-    const items = [
-        { id: 1, name: 'Item 1', category: 'Electronics', status: 'Available' },
-        { id: 2, name: 'Item 2', category: 'Furniture', status: 'Sold' },
-        { id: 3, name: 'Item 3', category: 'Electronics', status: 'Available' },
-        { id: 4, name: 'Item 4', category: 'Clothing', status: 'Out of Stock' },
-        { id: 5, name: 'Item 5', category: 'Furniture', status: 'Available' },
-    ];
-    const categories = ['All', 'Electronics', 'Furniture', 'Clothing'];
-    const statuses = ['All', 'Available', 'Sold', 'Out of Stock'];
+    const levels = ['All', 'Easy', 'Medium', 'Hard'];
+    const statuses = ['All', 'Resolved', 'Unresolved'];
 
-    const filteredItems = items.filter((item) => {
+    const filteredChallenge = challenges.filter((challenge) => {
         return (
-            (category === 'All' || item.category === category) &&
-            (status === 'All' || item.status === status) &&
-            (item.name.toLowerCase().includes(searchTerm.toLowerCase()))
+            (level === 'All' || challenge.level === level) &&
+            (status === 'All') &&
+            (challenge.content.toLowerCase().includes(search.toLowerCase()))
         );
     });
+
+    const navigate = useNavigate(); // ✅ Gọi hook tại đây
+
+    const toEditor = (id: number) => {
+        navigate(`/editor/${id}`); // nên thêm dấu /
+    };
 
     return (
         <div className="text-white px-6 pb-40 min-h-screen">
@@ -67,17 +69,18 @@ const LeetCode: React.FC = () => {
             {/* Danh sách challenges */}
             <div className="p-6 bg-neutral-900 rounded-xl flex gap-6">
                 <div className="w-2/3 flex flex-col gap-4">
-                    {filteredItems.map((item) => (
-                        <div key={item.id} className="bg-neutral-800 text-white cursor-pointer">
-                            <div className="p-4">
-                                <h3 className="text-lg font-bold">{item.name}</h3>
-                                <p>Category: {item.category}</p>
-                                <p>Status: {item.status}</p>
+                    {filteredChallenge.map((challenge) => (
+                        <div key={challenge.id} className="bg-neutral-800 text-white cursor-pointer">
+                            <div className="p-4" onClick={() => toEditor(challenge.id)}>
+                                <h2>ID: {challenge.id}</h2>
+                                <h3 className="text-lg font-medium text-sm text-green-500">{challenge.content}</h3>
+                                <p>Level: {challenge.level}</p>
+                                <p>Status: {"Unresolved"}</p>
                             </div>
                         </div>
                     ))}
-                    {filteredItems.length === 0 && (
-                        <div className="text-white">No items found.</div>
+                    {filteredChallenge.length === 0 && (
+                        <div className="text-white">No challenge found.</div>
                     )}
                 </div>
                 {/*Filtering  */}
@@ -85,20 +88,20 @@ const LeetCode: React.FC = () => {
                     <input
                         type="text"
                         placeholder="Search..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
                         className="p-2 w-full rounded-lg bg-neutral-700 text-white"
                     />
 
                     <p>Type</p>
                     <select
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
+                        value={level}
+                        onChange={(e) => setLevel(e.target.value)}
                         className="p-2 w-full rounded-lg bg-neutral-700 text-white"
                     >
-                        {categories.map((cat) => (
-                            <option key={cat} value={cat}>
-                                {cat}
+                        {levels.map((lv) => (
+                            <option key={lv} value={lv}>
+                                {lv}
                             </option>
                         ))}
                     </select>
