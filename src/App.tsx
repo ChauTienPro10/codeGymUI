@@ -7,6 +7,7 @@ import Home from './home/home';
 import SignUp from './signup/signup';
 import LeetCode from './leet_code/leetCode';
 import OAuthSuccess from './login/oauth-success';
+import OAuthFail from './login/oauth-fail';
 
 const App: React.FC = () => {
   return (
@@ -18,8 +19,10 @@ const App: React.FC = () => {
           <Route path="signup" element={<SignUp />} /> {/* /editor */}
           <Route path="editor/:id" element={<CodeEditor />} /> {/* /editor */}
           <Route path='leet-codes' element={<LeetCode />} />
-            <Route path='oauth-success' element={<OAuthSuccess />} />
+          <Route path='oauth-success' element={<OAuthSuccess />} />
+          
         </Route>
+        <Route path='oauth-fail' element={<OAuthFail />} />
       </Routes>
     </BrowserRouter>
   );

@@ -6,7 +6,7 @@ import { alertReducer, initialAlertState } from '../customAlert/alertReducer';
 import { useNavigate } from 'react-router-dom';
 import { FaGithub } from "react-icons/fa";
 import { FaGoogle } from "react-icons/fa";
-import { useLoginByGithub } from '../services/Oauth2Services';
+import { useLoginByGithub, useLoginGoogle } from '../services/Oauth2Services';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();
@@ -16,6 +16,7 @@ const Login: React.FC = () => {
   const { login, loading } = useLogin();
 
   const { loginByGithub } = useLoginByGithub();
+  const {loginByGoogle} = useLoginGoogle(); 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -98,10 +99,10 @@ const Login: React.FC = () => {
           </p>
 
           <div className="flex items-center justify-center space-x-4">
-            <button className="p-2 border rounded-full hover:bg-gray-100">
-              <FaGithub onClick={() => loginByGithub()} className="text-xl" />
+            <button onClick={() => loginByGithub()} className="p-2 border rounded-full hover:bg-gray-100">
+              <FaGithub  className="text-xl" />
             </button>
-            <button className="p-2 border rounded-full hover:bg-gray-100">
+            <button onClick={() => loginByGoogle()} className="p-2 border rounded-full hover:bg-gray-100">
               <FaGoogle className="text-xl text-red-500" />
             </button>
           </div>

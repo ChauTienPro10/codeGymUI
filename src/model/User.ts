@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 export interface CustomUser {
-  id: number;
+  id: number | null;
   name: string;
   username: string;
   jwt: string;

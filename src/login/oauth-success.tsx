@@ -1,26 +1,43 @@
 import React, { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { CustomUser } from '../model/User';
 
 const OAuthSuccess: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const token = params.get('token');
+  const params = new URLSearchParams(location.search);
+  const token = params.get('token');
+  const name = params.get('name');
+  const idParam = params.get('id');
 
-    if (token) {
-      // Lưu token vào localStorage hoặc context
-      localStorage.setItem('token', token);
+  const parsedId = idParam && !isNaN(Number(idParam)) ? Number(idParam) : null;
 
-      // Xóa token khỏi URL để sạch sẽ, tránh lộ token
-      params.delete('token');
-      navigate({ search: params.toString() }, { replace: true });
-    } else {
-      // Nếu không có token, có thể chuyển hướng về trang đăng nhập hoặc home
-      navigate('/', { replace: true });
-    }
-  }, [location, navigate]);
+  const user: CustomUser = {
+    id: parsedId,
+    username: '', // có thể set sau nếu cần
+    name: name ?? '',
+    jwt: token ?? '',
+  };
+
+  if (token) {
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user));
+
+    // Xoá các param khỏi URL
+    params.delete('token');
+    params.delete('id');
+    params.delete('name');
+
+    navigate({ search: params.toString() }, { replace: true });
+  } else {
+    navigate('/', { replace: true });
+    window.location.reload();
+
+  }
+}, [location.search, navigate]);
+
 
   return (
     <div>

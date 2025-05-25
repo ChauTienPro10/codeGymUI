@@ -10,3 +10,12 @@ export function useLoginByGithub() {
 
   return { loginByGithub };
 }
+
+export function useLoginGoogle() {
+  const loginByGoogle = () => {
+    const GOOGLE_AUTH_URL = `${SERVER_URL}/oauth/google/authorize`;
+    window.location.href = GOOGLE_AUTH_URL;
+  };
+
+  return { loginByGoogle };
+}
