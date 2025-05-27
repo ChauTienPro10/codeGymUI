@@ -15,11 +15,9 @@ export function useFetch<T>(url: string) {
     setError(null);
     fetch(url, {method: "GET",headers: getHeader() })
       .then((res) => {
-console.log(res)
         if (res.status === 401 || res.status === 403) {
             navigate("/login")
         }
-
         if (!res.ok) {
           throw new Error(`HTTP error! status: ${res.status}`);
         }
@@ -30,6 +28,7 @@ console.log(res)
         setLoading(false);
       })
       .catch((err) => {
+        console.log(err)
         setError(err.message);
         setLoading(false);
       });
