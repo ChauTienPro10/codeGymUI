@@ -47,7 +47,7 @@ const CodeEditor: React.FC = () => {
     return (
       <div className='main-page-editor'>
         <div className='chanlenge-container'>
-          <h3>Tiêu đề bài toán</h3>
+          <h3>Bài toán</h3>
           <p>{data?.data?.content}</p>
           <h3>Ví dụ input-output</h3>
           <p>Input : {data?.data?.simpleInput}</p>
@@ -156,11 +156,6 @@ const CodeEditor: React.FC = () => {
                               >
                                 {testCase.input}
                               </span>
-                            </p>
-
-                            <p className="text-sm text-blue-400 mt-2">
-                              <span className="font-medium">Expected Output:</span>{' '}
-                              {testCase.expectedResult}
                             </p>
                           </div>
                         );

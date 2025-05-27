@@ -4,11 +4,11 @@ import { useNavigate } from 'react-router-dom';
 
 import '../taiwind.css';
 
-const LeetCode: React.FC = () => {
-    const { challenges, loading, error } = useFetchChallenge(3);
+const ProblemResolve: React.FC = () => {
+    const { challenges, loading, error } = useFetchChallenge(2);
 
-    const total = 100; 
-    const [current, setCurrent] = useState(60);  
+    const total = 100;
+    const [current, setCurrent] = useState(60);
 
     const percentage = (current / total) * 100;
 
@@ -33,17 +33,53 @@ const LeetCode: React.FC = () => {
         navigate(`/editor/${id}`); // nên thêm dấu /
     };
 
+    const toOtherChallengeType = (_path : string) => {
+        navigate(_path);
+    }
+
     return (
         <div className="text-white px-6 pb-40 min-h-screen">
-             <div className="flex gap-4 items-center justify-between bg-neutral-800 p-6 rounded-2xl w-full max-w-8xl overflow-x-auto">
-                
-                <div className="bg-transparent p-4 text-[2vw] flex-grow basis-0 text-left rounded-xl min-w-[150px] text-[#C2B280] font-bold">
-                    Leet codes
+            <div className="group fixed bottom-4 right-4 w-16 h-16 z-50">
+
+                {/* Green circle - xuất hiện khi hover vào group */}
+                <div className="absolute bottom-[-48px] right-[-48px] w-40 h-40 bg-transparent rounded-full shadow-lg z-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+
+                    {/* 3 hình tròn nhỏ bên trong - xếp hình cánh quạt */}
+                    {[
+                        { size: 170, text: 'Algorithm',nav:'/algorithms' },
+                        { size: 225, text: 'Problem RS',nav:'/problem-resolves' },
+                        { size: 280, text: 'Leet code', nav:'/leet-codes' }].map(angle => (
+                        <div onClick={() => toOtherChallengeType(angle.nav)}
+                            key={angle.size}
+                            className="absolute w-12 h-12 rounded-full shadow-md cursor-pointer text-xs font-bold hover:text-green-500 flex items-center justify-center text-center leading-tight"
+                            style={{
+                                top: '50%',
+                                left: '50%',
+                                transform: `rotate(${angle.size}deg) translate(60px) rotate(-${angle.size}deg) translate(-50%, -50%)`
+                            }}
+                        >
+                            {angle.text}
+                        </div>
+                    ))}
+
                 </div>
-                
+
+                {/* Blue circle - luôn hiển thị */}
+                <div className="w-16 h-16 border-2 border-gray-300 rounded-full shadow-lg z-50 group-hover:text-green-500 group-hover:border-transparent cursor-pointer transition-opacity duration-300 flex items-center justify-center text-center leading-tight text-[12px] font-bold">
+                    Go to
+                </div>
+
+            </div>
+
+            <div className="flex gap-4 items-center justify-between bg-neutral-800 p-6 rounded-2xl w-full max-w-8xl overflow-x-auto">
+
+                <div className="bg-transparent p-4 text-[2vw] flex-grow basis-0 text-left rounded-xl min-w-[150px] text-[#C2B280] font-bold">
+                    Giải quyết vấn đề
+                </div>
+
                 <div className="bg-transparent p-4 flex-grow basis-0 text-center rounded-xl min-w-[150px]">
-                {/* Thanh tiến trình */}
-                <div className="relative pt-1">
+                    {/* Thanh tiến trình */}
+                    <div className="relative pt-1">
                         <div className="text-center text-white mb-4">
                             <h3 className="text-base">Progress: {Math.round(percentage)}%</h3>
                         </div>
@@ -124,4 +160,4 @@ const LeetCode: React.FC = () => {
     );
 }
 
-export default LeetCode;
+export default ProblemResolve;

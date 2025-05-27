@@ -5,9 +5,11 @@ import Login from './login/login';
 import CodeEditor from './code_screen/CodeEditor';
 import Home from './home/home';
 import SignUp from './signup/signup';
-import LeetCode from './leet_code/leetCode';
+import LeetCode from './challenges/leetCode';
 import OAuthSuccess from './login/oauth-success';
 import OAuthFail from './login/oauth-fail';
+import Algorithm from './challenges/algorithm';
+import ProblemResolve from './challenges/problemResolve';
 
 const App: React.FC = () => {
   return (
@@ -19,6 +21,8 @@ const App: React.FC = () => {
           <Route path="signup" element={<SignUp />} /> {/* /editor */}
           <Route path="editor/:id" element={<CodeEditor />} /> {/* /editor */}
           <Route path='leet-codes' element={<LeetCode />} />
+          <Route path='/algorithms' element={<Algorithm />} />
+          <Route path='/problem-resolves' element={<ProblemResolve />} />
           <Route path='oauth-success' element={<OAuthSuccess />} />
           
         </Route>
