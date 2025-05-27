@@ -28,8 +28,7 @@ export function useFetch<T>(url: string) {
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err)
-        setError(err.message);
+        setError(err.message);  
         setLoading(false);
       });
   }, [url]);
