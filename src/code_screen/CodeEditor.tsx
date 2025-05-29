@@ -8,31 +8,36 @@ import 'ace-builds/src-noconflict/mode-python';
 import 'ace-builds/src-noconflict/mode-java';
 import 'ace-builds/src-noconflict/mode-c_cpp';
 import 'ace-builds/src-noconflict/theme-monokai';
+import 'ace-builds/src-noconflict/mode-rust';
 import { useFetch } from '../useFetch';
 import { useJavaCompileHandler } from './useJavaCompileHandler';
 import { useParams } from 'react-router-dom';
 
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
-const compileUrl = `${SERVER_URL}/java/compile/`;
-const runUrl = `${SERVER_URL}/java/compile/run`;
-const testUrl = `${SERVER_URL}/java/compile/runWithTestcases`;
 
 const CodeEditor: React.FC = () => {
   const { id } = useParams();
   const [language, setLanguage] = useState('javascript');
 
+  const compileUrl = `${SERVER_URL}/compile/${language}/`;
+  const runUrl = `${SERVER_URL}/compile/${language}/run`;
+  const testUrl = `${SERVER_URL}/compile/${language}/runWithTestcases`;
+
   // xử lý cho code defaulf.
   const [code, setCode] = useState('');
-  const { data, loading, error } = useFetch<any>(`${SERVER_URL}/java/compile/challenge/${id}`);
-  useEffect(() => {
-    if (language === 'javascript') {
-      setCode("output");
-    }
+  const { data, loading, error } = useFetch<any>(`${SERVER_URL}/challenges/${id}`);
+  const languageTemplateMap: Record<string, any> = {
+    java: data?.data?.templateJava,
+    python: data?.data?.templatePython,
+    rust: data?.data?.templateRust,
+    c_cpp: data?.data?.templateC,
+  };
 
-    if (language === 'java') {
-      setCode(data.data.template);
+  useEffect(() => {
+    if (data && languageTemplateMap[language]) {
+      setCode(languageTemplateMap[language]);
     }
-  }, [language]);
+  }, [data, language]);
   ////////////////////////////////////////////////
 
   const { handleCompile, handleRun, handleTest, testCases, output, loading: compileLoading, sttOutput } = useJavaCompileHandler(
@@ -77,9 +82,9 @@ const CodeEditor: React.FC = () => {
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
           >
-            <option value="javascript">JavaScript</option>
-            <option value="python">Python</option>
             <option value="java">Java</option>
+            <option value="rust">Rust</option>
+            <option value="python">Python</option>
             <option value="c_cpp">C/C++</option>
           </select>
           <div className='action'>
@@ -117,7 +122,7 @@ const CodeEditor: React.FC = () => {
             mode={language}
             theme="monokai"
             onChange={(val) => setCode(val)}
-            value={code}
+            value={code || data?.data?.templateJava}
             name="codeEditor"
             editorProps={{ $blockScrolling: true }}
             width="100%"

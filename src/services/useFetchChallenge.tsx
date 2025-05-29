@@ -11,7 +11,7 @@ interface ApiResponse<T> {
 const SERVER_URL = process.env.REACT_APP_SERVER_URL;
 
 export function useFetchChallenge(type: number) {
-    const ENDPOINT = `${SERVER_URL}/Challenges/${type}`;
+    const ENDPOINT = `${SERVER_URL}/challenges/type/${type}`;
     const { data, loading, error } = useFetch<ApiResponse<ChallengeDto[]>>(ENDPOINT);
     return {
         challenges: data?.data || [],
