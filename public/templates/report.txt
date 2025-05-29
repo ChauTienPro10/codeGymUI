@@ -1,0 +1,31 @@
+Alert report (2025-05-28)
+アドレポ関係各位
+本日の前日データ取得処理において遅延もしくは障害が発生している可能性があります。
+下記のメッセージとDB上のget_report_queueテーブルを確認し、対応を行ってください。
+※このメッセージはEVERRISE社、イルグルム社の双方の運用担当者に送信されています。
+■Twitter API
+○遅延（現時点で一度も実行されていない処理が [17/6232] 件存在しています）
+○遅延あるいは取得障害（異常終了している処理が [752/6232] 件存在しています）
+
+
+1. Chay truy vấn :
+SELECT count(*) as nums, ERROR_TYPE FROM get_report_queue_twitter 
+where status != 2 and CREATED_DATE = curdate() and CREATED_AT < '2025-05-28 09:30:00'
+group  BY  ERROR_TYPE
+ORDER BY ERROR_TYPE
+
+- Kết quả 
++ 13 qu err type null
++ 104 qu err type  2
++ 26 qu err type 3
++ 709 q8 err type 4
+
+- Kiem tr 13 qu err type null
++ SELECT * FROM get_report_queue_twitter 
+where status != 2 and CREATED_DATE = curdate() and CREATED_AT < '2025-05-28 09:30:00' and ERROR_TYPE is null
+order By CREATED_AT desc
+   _ Đều có status = 1 
+   => Do các qu chưa hoàn thành dowloading 
+
+- Kiểm tra 704 qu errtype = 4 trong log file 
+
