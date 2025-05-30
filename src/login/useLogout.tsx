@@ -1,7 +1,7 @@
 import { useState } from "react"
 import { useGenHeader } from "../use_features/useGenHeader" 
 
-const SERVER_URL = process.env.REACT_APP_SERVER_URL
+const SERVER_URL = window._env_?.APP_SERVER_URL;
 
 type LogoutResult = {
   error: string | null
