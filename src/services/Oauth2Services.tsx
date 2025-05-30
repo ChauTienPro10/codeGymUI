@@ -1,6 +1,6 @@
 import { useFetch } from '../useFetch';
 
-const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+const SERVER_URL = window._env_?.APP_SERVER_URL;
 
 export function useLoginByGithub() {
   const loginByGithub = () => {

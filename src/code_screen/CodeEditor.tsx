@@ -13,11 +13,11 @@ import { useFetch } from '../useFetch';
 import { useJavaCompileHandler } from './useJavaCompileHandler';
 import { useParams } from 'react-router-dom';
 
-const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+const SERVER_URL = window._env_?.APP_SERVER_URL;
 
 const CodeEditor: React.FC = () => {
   const { id } = useParams();
-  const [language, setLanguage] = useState('javascript');
+  const [language, setLanguage] = useState('java');
 
   const compileUrl = `${SERVER_URL}/compile/${language}/`;
   const runUrl = `${SERVER_URL}/compile/${language}/run`;

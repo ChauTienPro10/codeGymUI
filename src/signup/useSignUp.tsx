@@ -5,7 +5,8 @@ interface SignUpResponse {
     name: string;
     username: string;
 }
-const SERVER_URL = process.env.REACT_APP_SERVER_URL;
+const SERVER_URL = window._env_?.APP_SERVER_URL;
+
 export const useSignup = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
