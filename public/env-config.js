@@ -1,5 +1,5 @@
 window._env_ = {
-  APP_SERVER_URL: "http://192.168.49.2:30640"
+  APP_SERVER_URL: "http://localhost:8080"
 };
 
 

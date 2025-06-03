@@ -27,7 +27,7 @@ export const useSignup = () => {
       const result = await response.json();
 
       if (!response.ok || !result.data) {
-        const message = result?.message || "Login failed";
+        const message = result?.message + JSON.stringify(result?.data) || "Login failed";
         return { data: null, error: message };
       }
       return { data: result.data, error: null };
